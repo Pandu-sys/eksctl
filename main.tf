@@ -58,16 +58,16 @@ resource "aws_security_group" "workstation" {
   }
 }
 
-/* resource "terraform_data" "cluster_create" {
+resource "terraform_data" "cluster_destroy" {
   input = {
     host     = aws_instance.workstation.public_ip
     password = var.ssh_password
   }
 
   provisioner "remote-exec" {
-    # when = create
+    when = destroy
     inline = [
-      "eksctl create cluster -f /home/ec2-user/eksctl/eksctl.yaml"
+      "eksctl delete cluster -f /home/ec2-user/eksctl/eksctl.yaml --wait"
     ]
     connection {
       type     = "ssh"
@@ -76,24 +76,4 @@ resource "aws_security_group" "workstation" {
       password = self.input.password
     }
   }
-} */
-
-# resource "terraform_data" "cluster_destroy" {
-#   input = {
-#     host     = aws_instance.workstation.public_ip
-#     password = var.ssh_password
-#   }
-
-#   provisioner "remote-exec" {
-#     when = destroy
-#     inline = [
-#       "eksctl delete cluster -f /home/ec2-user/eksctl/eksctl.yaml --wait"
-#     ]
-#     connection {
-#       type     = "ssh"
-#       host     = self.input.host
-#       user     = "ec2-user"
-#       password = self.input.password
-#     }
-#   }
-# }
+}
